@@ -1,9 +1,9 @@
 package com.otsnd.productmanager.controller.utils;
 
-import com.otsnd.productmanager.dto.OrderDTO;
-import com.otsnd.productmanager.dto.OrderItemDTO;
-import com.otsnd.productmanager.dto.ProductDTO;
-import com.otsnd.productmanager.dto.UserDTO;
+import com.otsnd.productmanager.dto.response.OrderDTO;
+import com.otsnd.productmanager.dto.response.OrderItemDTO;
+import com.otsnd.productmanager.dto.response.ProductDTO;
+import com.otsnd.productmanager.dto.response.UserDTO;
 import com.otsnd.productmanager.entity.Order;
 import com.otsnd.productmanager.entity.OrderItem;
 import com.otsnd.productmanager.entity.Product;

@@ -1,4 +1,4 @@
-package com.otsnd.productmanager.dto;
+package com.otsnd.productmanager.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

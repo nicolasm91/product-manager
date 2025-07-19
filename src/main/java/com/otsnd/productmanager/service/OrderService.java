@@ -1,7 +1,7 @@
 package com.otsnd.productmanager.service;
 
 import com.otsnd.productmanager.controller.utils.DTOMapper;
-import com.otsnd.productmanager.dto.OrderDTO;
+import com.otsnd.productmanager.dto.response.OrderDTO;
 import com.otsnd.productmanager.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 

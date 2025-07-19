@@ -1,7 +1,7 @@
 package com.otsnd.productmanager.controller;
 
 import com.otsnd.productmanager.constants.Constants;
-import com.otsnd.productmanager.dto.ProductDTO;
+import com.otsnd.productmanager.dto.response.ProductDTO;
 import com.otsnd.productmanager.service.ProductsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
