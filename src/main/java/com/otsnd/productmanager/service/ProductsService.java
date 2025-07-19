@@ -1,6 +1,7 @@
 package com.otsnd.productmanager.service;
 
-import com.otsnd.productmanager.entity.Product;
+import com.otsnd.productmanager.controller.utils.DTOMapper;
+import com.otsnd.productmanager.dto.ProductDTO;
 import com.otsnd.productmanager.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +16,15 @@ public class ProductsService {
         this.repository = repository;
     }
 
-    public Optional<Product> findById(long id) {
-        return repository.findById(id);
+    public Optional<ProductDTO> findById(long id) {
+        return repository.findById(id)
+                .map(DTOMapper::mapProductDTO);
     }
 
-    public List<Product> findAll() {
-        return this.repository.findAll();
+    public List<ProductDTO> findAll() {
+        return this.repository.findAll()
+                .stream()
+                .map(DTOMapper::mapProductDTO)
+                .toList();
     }
 }
