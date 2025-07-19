@@ -12,7 +12,6 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Data
@@ -31,8 +30,6 @@ public class Order {
 
     public Double getTotalOrderPrice() {
         return this.getItems().stream()
-                .filter(Objects::nonNull)
-                .filter(orderItem -> orderItem.getQuantity() != null && orderItem.getProduct().getPrice() != null)
                 .map(orderItem -> orderItem.getQuantity() * orderItem.getProduct().getPrice())
                 .mapToDouble(Double::valueOf).sum();
     }

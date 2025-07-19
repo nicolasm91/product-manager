@@ -2,13 +2,16 @@ package com.otsnd.productmanager.controller;
 
 import com.otsnd.productmanager.dto.OrderDTO;
 import com.otsnd.productmanager.dto.OrderItemDTO;
+import com.otsnd.productmanager.dto.ProductDTO;
 import com.otsnd.productmanager.dto.UserDTO;
 import com.otsnd.productmanager.entity.Order;
 import com.otsnd.productmanager.entity.OrderItem;
+import com.otsnd.productmanager.entity.Product;
 import com.otsnd.productmanager.entity.User;
 import com.otsnd.productmanager.exceptions.OrderItemInvalidException;
 import com.otsnd.productmanager.exceptions.ProductMissingException;
 import com.otsnd.productmanager.service.OrderService;
+import com.otsnd.productmanager.service.ProductsService;
 import com.otsnd.productmanager.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,14 +32,33 @@ import java.util.Optional;
 public class UserController {
     private final OrderService orderService;
     private final UserService userService;
+    private final ProductsService productsService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private static final String ERROR_MESSAGE = "error_message";
 
     public UserController(OrderService orderService,
-                          UserService userService) {
+                          UserService userService,
+                          ProductsService productsService) {
         this.orderService = orderService;
         this.userService = userService;
+        this.productsService = productsService;
+    }
+
+    @GetMapping("/product/{id}")
+    public ResponseEntity<?> findProductById(@PathVariable Long id) {
+        Optional<Product> productOpt = this.productsService.findById(id);
+
+        if (productOpt.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Collections.singletonMap(ERROR_MESSAGE, "product with id " + id + " not found"));
+
+        Product product = productOpt.get();
+
+        return ResponseEntity.ok(new ProductDTO(product.getId(),
+                product.getName(),
+                (Math.round(product.getPrice() * 100.0) / 100.0),
+                product.getStock()));
+
     }
 
     @GetMapping("/user/{id}")
@@ -73,24 +95,15 @@ public class UserController {
         List<OrderItemDTO> orderItems = order.getItems()
                 .stream()
                 .map(UserController::mapOrderItemDTO)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
                 .toList();
 
         return new OrderDTO(order.getId(), orderItems, order.getTotalOrderPrice());
     }
 
-    private static Optional<OrderItemDTO> mapOrderItemDTO(OrderItem orderItem) {
-        try {
-            return Optional.of(new OrderItemDTO(orderItem.getQuantity(),
-                            orderItem.getProduct().getId(),
-                            orderItem.getProduct().getName(),
-                            orderItem.getPartialItemPrice()));
-
-        }catch (ProductMissingException | OrderItemInvalidException e) {
-            LOGGER.error(e.getMessage());
-
-            return Optional.empty();
-        }
+    private static OrderItemDTO mapOrderItemDTO(OrderItem orderItem) {
+        return new OrderItemDTO(orderItem.getQuantity(),
+                orderItem.getProduct().getId(),
+                orderItem.getProduct().getName(),
+                orderItem.getPartialItemPrice());
     }
 }

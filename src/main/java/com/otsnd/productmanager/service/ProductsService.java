@@ -5,6 +5,7 @@ import com.otsnd.productmanager.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductsService {
@@ -14,7 +15,7 @@ public class ProductsService {
         this.repository = repository;
     }
 
-    public Product findById(long id) {
+    public Optional<Product> findById(long id) {
         return repository.findById(id);
     }
 
