@@ -74,10 +74,17 @@ public class ProductsService {
             product.setName(productDTO.getName());
             changed = true;
         }
+
+        if (Strings.isNotBlank(productDTO.getDescription()) && productDTO.getDescription().length() <= 500) {
+            product.setDescription(productDTO.getDescription());
+            changed = true;
+        }
+
         if (productDTO.getStock() != null && productDTO.getStock() > 0) {
             product.setStock(productDTO.getStock()); // only allows increase stock
             changed = true;
         }
+
         if (productDTO.getPrice() != null && productDTO.getPrice() > 0) {
             product.setPrice(productDTO.getPrice()); // doesn't allow free products
             changed = true;

@@ -23,6 +23,8 @@ public class Product {
     private Long id;
     @Column(nullable = false)
     private String name;
+    @Column(nullable = false, length = 500)
+    private String description;
     @Column(nullable = false)
     private Double price;
     @Column(nullable = false)

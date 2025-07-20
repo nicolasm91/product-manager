@@ -4,16 +4,16 @@ INSERT INTO APP_USERS (ID, USERNAME, NAME, LAST_NAME) VALUES (2, 'user2', 'Bob',
 INSERT INTO APP_USERS (ID, USERNAME, NAME, LAST_NAME) VALUES (3, 'user3', 'Charlie', 'Brown');
 
 -- PRODUCTS
-INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK) VALUES (1, 'Keyboard', 49.99, 100);
-INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK) VALUES (2, 'Mouse', 19.99, 200);
-INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK) VALUES (3, 'Monitor', 149.99, 50);
-INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK) VALUES (4, 'Headset', 89.99, 75);
-INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK) VALUES (5, 'USB Cable', 5.99, 300);
-INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK) VALUES (6, 'Webcam', 69.99, 60);
-INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK) VALUES (7, 'Laptop Stand', 39.99, 80);
-INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK) VALUES (8, 'Microphone', 59.99, 40);
-INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK) VALUES (9, 'Speaker', 29.99, 90);
-INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK) VALUES (10, 'SSD', 99.99, 70);
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK, DESCRIPTION) VALUES (1, 'Keyboard', 49.99, 100, 'Ergonomic mechanical keyboard with RGB backlighting.');
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK, DESCRIPTION) VALUES (2, 'Mouse', 19.99, 200, 'Wireless optical mouse with adjustable DPI settings.');
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK, DESCRIPTION) VALUES (3, 'Monitor', 149.99, 50, '27-inch Full HD IPS monitor with thin bezels.');
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK, DESCRIPTION) VALUES (4, 'Headset', 89.99, 75, 'Gaming headset with surround sound and noise-canceling microphone.');
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK, DESCRIPTION) VALUES (5, 'USB Cable', 5.99, 300, '6-foot USB-A to USB-C charging and data cable.');
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK, DESCRIPTION) VALUES (6, 'Webcam', 69.99, 60, '1080p HD webcam with built-in stereo microphone.');
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK, DESCRIPTION) VALUES (7, 'Laptop Stand', 39.99, 80, 'Adjustable aluminum laptop stand for improved ergonomics.');
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK, DESCRIPTION) VALUES (8, 'Microphone', 59.99, 40, 'USB condenser microphone for streaming and recording.');
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK, DESCRIPTION) VALUES (9, 'Speaker', 29.99, 90, 'Compact Bluetooth speaker with rich bass.');
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK, DESCRIPTION) VALUES (10, 'SSD', 99.99, 70, '1TB NVMe Solid State Drive for lightning-fast storage.');
 
 -- ORDERS
 INSERT INTO ORDERS (ID, USER_ID, CREATED_AT) VALUES (1, 1, '2025-07-20 09:00:00');

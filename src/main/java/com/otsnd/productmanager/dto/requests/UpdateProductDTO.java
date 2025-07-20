@@ -15,6 +15,8 @@ public class UpdateProductDTO {
     private Long productId;
     @Nullable
     private String name;
+    @Nullable
+    private String description;
     @Min(value = 1, message = "price must be at least 1")
     private Double price;
     @Min(value = 1, message = "stock must be at least 1")
@@ -22,7 +24,8 @@ public class UpdateProductDTO {
 
     public boolean isInvalid() {
         boolean invalidName = name != null && (name.isEmpty() || name.isBlank());
+        boolean invalidDescription = description != null && (description.isEmpty() || description.isBlank() || description.length() > 500);
 
-        return invalidName && productId != null && price == null && stock == null;
+        return invalidName && invalidDescription && productId != null && price == null && stock == null;
     }
 }

@@ -35,6 +35,7 @@ public class DTOMapper {
     public static ProductDTO mapProductDTO(Product product) {
         return new ProductDTO(product.getId(),
                 product.getName(),
+                product.getDescription(),
                 roundValues(product.getPrice()),
                 product.getStock());
     }
