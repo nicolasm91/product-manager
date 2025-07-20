@@ -2,6 +2,7 @@ package com.otsnd.productmanager.service;
 
 import com.otsnd.productmanager.controller.utils.DTOMapper;
 import com.otsnd.productmanager.dto.response.ProductDTO;
+import com.otsnd.productmanager.entity.Product;
 import com.otsnd.productmanager.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +27,12 @@ public class ProductsService {
                 .stream()
                 .map(DTOMapper::mapProductDTO)
                 .toList();
+    }
+
+    public List<Product> findAllEntities() {
+        return repository.findAll();
+    }
+    public Product save(Product product) {
+        return repository.save(product);
     }
 }

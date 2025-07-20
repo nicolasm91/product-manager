@@ -31,7 +31,7 @@ public class OrdersController {
     public ResponseEntity<?> createNewOrder(@Valid @RequestBody OrderRequestDTO request) {
         OrderDTO order = this.orderService.placeOrder(request);
 
-        return ResponseEntity.ok(request);
+        return ResponseEntity.ok(order);
     }
 
     @GetMapping("/user/{id}")

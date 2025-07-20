@@ -9,12 +9,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "ORDERS")
 public class Order {
     @Id
@@ -32,5 +36,14 @@ public class Order {
         return this.getItems().stream()
                 .map(orderItem -> orderItem.getQuantity() * orderItem.getProduct().getPrice())
                 .mapToDouble(Double::valueOf).sum();
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", user=" + user +
+                ", items=" + items +
+                '}';
     }
 }

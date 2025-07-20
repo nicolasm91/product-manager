@@ -11,26 +11,30 @@ import com.otsnd.productmanager.entity.User;
 
 
 public class DTOMapper {
+    public static Double roundValues(Double value) {
+        return Math.round(value * 100.0) / 100.0;
+    }
+
     public static OrderDTO mapOrderDTO(Order order) {
         return new OrderDTO(order.getId(),
                 order.getItems()
                         .stream()
                         .map(DTOMapper::mapOrderItemDTO)
                         .toList(),
-                order.getTotalOrderPrice());
+                roundValues(order.getTotalOrderPrice()));
     }
 
     public static OrderItemDTO mapOrderItemDTO(OrderItem orderItem) {
         return new OrderItemDTO(orderItem.getQuantity(),
                 orderItem.getProduct().getId(),
                 orderItem.getProduct().getName(),
-                orderItem.getPartialItemPrice());
+                roundValues(orderItem.getPartialItemPrice()));
     }
 
     public static ProductDTO mapProductDTO(Product product) {
         return new ProductDTO(product.getId(),
                 product.getName(),
-                (Math.round(product.getPrice() * 100.0) / 100.0),
+                roundValues(product.getPrice()),
                 product.getStock());
     }
 
@@ -40,6 +44,6 @@ public class DTOMapper {
                 user.getLastName(),
                 user.getUsername(),
                 user.getOrders().size(),
-                user.getOrdersTotalPrice());
+                roundValues(user.getOrdersTotalPrice()));
     }
 }

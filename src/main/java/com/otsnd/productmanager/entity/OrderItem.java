@@ -8,11 +8,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "ORDER_ITEM")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,5 +39,15 @@ public class OrderItem {
 
     public Double getPartialItemPrice() {
         return  this.getProduct().getPrice() * this.getQuantity();
+    }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", order=" + order +
+                ", product=" + product +
+                '}';
     }
 }

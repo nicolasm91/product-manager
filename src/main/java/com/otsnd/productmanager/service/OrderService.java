@@ -7,15 +7,19 @@ import com.otsnd.productmanager.dto.response.OrderDTO;
 import com.otsnd.productmanager.dto.response.ProductDTO;
 import com.otsnd.productmanager.dto.response.UserDTO;
 import com.otsnd.productmanager.entity.Order;
+import com.otsnd.productmanager.entity.OrderItem;
+import com.otsnd.productmanager.entity.Product;
+import com.otsnd.productmanager.entity.User;
 import com.otsnd.productmanager.exceptions.ExceededStockException;
 import com.otsnd.productmanager.exceptions.ProductMissingException;
 import com.otsnd.productmanager.exceptions.RepeatedProductInRequestException;
 import com.otsnd.productmanager.exceptions.UserNotFoundException;
 import com.otsnd.productmanager.repository.OrderRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,22 +42,58 @@ public class OrderService {
         return repository.findAllByUserId(id)
                 .stream()
                 .map(DTOMapper::mapOrderDTO)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    @Transactional
     public OrderDTO placeOrder(OrderRequestDTO request) {
         UserDTO user = this.validateUser(request.getUserId());
         List<OrderItemRequestDTO> validatedProducts = this.validateProducts(request.getItems());
+        Order empty = this.repository.save(new Order());
+        Order entity = this.mapOrderEntity(user, validatedProducts, empty);
 
-        //Order order = this.repository.save(new Order());
-        //return DTOMapper.mapOrderDTO(order);
+        Order result = this.repository.save(entity);
 
-        return new OrderDTO();
+        return DTOMapper.mapOrderDTO(result);
+    }
+
+    private Order mapOrderEntity(UserDTO userDTO, List<OrderItemRequestDTO> requestItems, Order order) {
+        User user = this.userService.findEntityById(userDTO.getId())
+                .orElseThrow(UserNotFoundException::new);
+
+        List<Product> products = this.productsService.findAllEntities();
+        if (products.isEmpty()) throw new ProductMissingException();
+
+        List<OrderItem> orderItems = requestItems.stream()
+                .map(orderItemRequestDTO -> mapOrderItem(orderItemRequestDTO, products, order))
+                .collect(Collectors.toCollection(ArrayList::new));
+
+
+        order.setUser(user);
+        order.setItems(orderItems);
+
+        return order;
+    }
+
+    private OrderItem mapOrderItem(OrderItemRequestDTO orderItemRequestDTO, List<Product> products, Order entity) {
+        Product product = products.stream()
+                .filter(prod -> Objects.equals(prod.getId(), orderItemRequestDTO.getProductId()))
+                .findAny().orElseThrow(ProductMissingException::new);
+
+        product.setStock(product.getStock() - orderItemRequestDTO.getQuantity());
+        product = this.productsService.save(product);
+
+        return OrderItem.builder()
+                .id(null)
+                .order(entity)
+                .product(product)
+                .quantity(orderItemRequestDTO.getQuantity())
+                .build();
     }
 
     private UserDTO validateUser(long userId) {
         Optional<UserDTO> user = this.userService.findById(userId);
-        if (user.isEmpty()) throw new UserNotFoundException("User not found");
+        if (user.isEmpty()) throw new UserNotFoundException();
 
         return user.get();
     }
@@ -62,7 +102,7 @@ public class OrderService {
 
         List<Optional<ProductDTO>> products = items.stream()
                 .map(item -> this.productsService.findById(item.getProductId()))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
 
         if (products.stream().anyMatch(Optional::isEmpty)) throw new ProductMissingException();
 
@@ -78,11 +118,11 @@ public class OrderService {
 
         List<OrderItemRequestDTO> mappedRequests = items.stream()
                 .map(orderItemRequestDTO -> mapProductToOrder(orderItemRequestDTO, products))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
 
         List<OrderItemRequestDTO> exceedStock = mappedRequests.stream()
                 .filter(orderItemRequestDTO -> (orderItemRequestDTO.getQuantity() > orderItemRequestDTO.getProduct().getStock()))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
 
         if (!exceedStock.isEmpty()) throw new ExceededStockException("Exceed stock", exceedStock);
 
