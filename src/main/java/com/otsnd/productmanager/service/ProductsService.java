@@ -1,8 +1,10 @@
 package com.otsnd.productmanager.service;
 
 import com.otsnd.productmanager.controller.utils.DTOMapper;
+import com.otsnd.productmanager.dto.requests.CreateProductDTO;
 import com.otsnd.productmanager.dto.response.ProductDTO;
 import com.otsnd.productmanager.entity.Product;
+import com.otsnd.productmanager.exceptions.DuplicatedProductName;
 import com.otsnd.productmanager.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +36,19 @@ public class ProductsService {
     }
     public Product save(Product product) {
         return repository.save(product);
+    }
+
+    public Product newProduct(CreateProductDTO productDTO) {
+        boolean nameMatches = repository.findAll()
+                .stream()
+                .anyMatch(product -> product.getName().equals(productDTO.getName()));
+
+        if (nameMatches) throw new DuplicatedProductName();
+
+        return repository.save(Product.builder()
+                .name(productDTO.getName())
+                .stock(productDTO.getStock())
+                .price(productDTO.getPrice())
+                .build());
     }
 }

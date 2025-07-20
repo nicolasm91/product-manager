@@ -27,7 +27,7 @@ public class OrdersController {
         this.orderService = orderService;
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<?> createNewOrder(@Valid @RequestBody OrderRequestDTO request) {
         OrderDTO order = this.orderService.placeOrder(request);
 
