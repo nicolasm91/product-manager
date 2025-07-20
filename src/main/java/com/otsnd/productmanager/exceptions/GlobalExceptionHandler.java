@@ -66,6 +66,16 @@ public class GlobalExceptionHandler {
                         Constants.TIMESTAMP, LocalDateTime.now()));
     }
 
+    @ExceptionHandler(ProductUpdateInvalidException.class)
+    public ResponseEntity<?> handleProductMissingException(ProductUpdateInvalidException exception) {
+        LOGGER.error("error message: {}",exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of(
+                        Constants.ERROR_MESSAGE, exception.getMessage(),
+                        Constants.TIMESTAMP, LocalDateTime.now()));
+    }
+
     @ExceptionHandler(ExceededStockException.class)
     public ResponseEntity<?> handleExceededStockException(ExceededStockException exception) {
         LOGGER.error("error message: {}",exception.getMessage());

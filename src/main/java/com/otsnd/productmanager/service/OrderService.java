@@ -99,16 +99,18 @@ public class OrderService {
     }
 
     private List<OrderItemRequestDTO> validateProducts(List<OrderItemRequestDTO> items) {
+        List<Long> itemIDs = items.stream()
+                .map(OrderItemRequestDTO::getProductId)
+                .toList();
 
-        List<Optional<ProductDTO>> products = items.stream()
-                .map(item -> this.productsService.findById(item.getProductId()))
-                .collect(Collectors.toCollection(ArrayList::new));
+        List<ProductDTO> products = productsService.findAll();
 
-        if (products.stream().anyMatch(Optional::isEmpty)) throw new ProductMissingException();
+        boolean noneMatch = products.stream()
+                .noneMatch(productDTO -> itemIDs.contains(productDTO.getId()));
+
+        if (noneMatch) throw new ProductMissingException();
 
         boolean repeatedProducts = products.stream()
-                .filter(Optional::isPresent)
-                .map(Optional::get)
                 .collect(Collectors.groupingBy(ProductDTO::getId, Collectors.counting()))
                 .entrySet()
                 .stream()
@@ -129,10 +131,8 @@ public class OrderService {
         return items;
     }
 
-    private static OrderItemRequestDTO mapProductToOrder(OrderItemRequestDTO orderItemRequestDTO, List<Optional<ProductDTO>> products) {
+    private static OrderItemRequestDTO mapProductToOrder(OrderItemRequestDTO orderItemRequestDTO, List<ProductDTO> products) {
         Optional<ProductDTO> product = products.stream()
-                .filter(Optional::isPresent)
-                .map(Optional::get)
                 .filter(productDTO -> Objects.equals(productDTO.getId(), orderItemRequestDTO.getProductId()))
                 .findAny();
 

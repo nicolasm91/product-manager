@@ -2,12 +2,14 @@ package com.otsnd.productmanager.controller;
 
 import com.otsnd.productmanager.constants.Constants;
 import com.otsnd.productmanager.dto.requests.CreateProductDTO;
+import com.otsnd.productmanager.dto.requests.UpdateProductDTO;
 import com.otsnd.productmanager.dto.response.ProductDTO;
 import com.otsnd.productmanager.service.ProductsService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +36,13 @@ public class ProductsController {
         return (product.isPresent() ? ResponseEntity.ok().body(product.get()) :
                 ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Collections.singletonMap(Constants.ERROR_MESSAGE, "product with id " + id + " not found")));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateProductById(@PathVariable Long id, @RequestBody UpdateProductDTO productDTO) {
+        productDTO.setProductId(id);
+
+        return ResponseEntity.ok(productsService.updateExistingProduct(productDTO));
     }
 
     @PostMapping("")
