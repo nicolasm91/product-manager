@@ -18,6 +18,7 @@ import com.otsnd.productmanager.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -49,20 +50,20 @@ public class OrderService {
     public OrderDTO placeOrder(OrderRequestDTO request) {
         UserDTO user = this.validateUser(request.getUserId());
         List<OrderItemRequestDTO> validatedProducts = this.validateProducts(request.getItems());
-        Order empty = this.repository.save(new Order());
-        Order entity = this.mapOrderEntity(user, validatedProducts, empty);
-
+        Order entity = this.mapOrderEntity(user, validatedProducts);
         Order result = this.repository.save(entity);
 
         return DTOMapper.mapOrderDTO(result);
     }
 
-    private Order mapOrderEntity(UserDTO userDTO, List<OrderItemRequestDTO> requestItems, Order order) {
+    private Order mapOrderEntity(UserDTO userDTO, List<OrderItemRequestDTO> requestItems) {
         User user = this.userService.findEntityById(userDTO.getId())
                 .orElseThrow(UserNotFoundException::new);
 
         List<Product> products = this.productsService.findAllEntities();
         if (products.isEmpty()) throw new ProductMissingException();
+
+        Order order = new Order();
 
         List<OrderItem> orderItems = requestItems.stream()
                 .map(orderItemRequestDTO -> mapOrderItem(orderItemRequestDTO, products, order))
@@ -71,6 +72,7 @@ public class OrderService {
 
         order.setUser(user);
         order.setItems(orderItems);
+        order.setCreatedAt(LocalDateTime.now());
 
         return order;
     }

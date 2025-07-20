@@ -21,7 +21,8 @@ public class DTOMapper {
                         .stream()
                         .map(DTOMapper::mapOrderItemDTO)
                         .toList(),
-                roundValues(order.getTotalOrderPrice()));
+                roundValues(order.getTotalOrderPrice()),
+                order.getCreatedAt());
     }
 
     public static OrderItemDTO mapOrderItemDTO(OrderItem orderItem) {

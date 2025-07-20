@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -16,10 +17,12 @@ public class OrderDTO {
     private List<OrderItemDTO> items;
     @JsonProperty("total_prize")
     private Double totalPrice;
+    private LocalDateTime createdAt;
 
-    public OrderDTO(long id, List<OrderItemDTO> items, Double totalPrice) {
+    public OrderDTO(long id, List<OrderItemDTO> items, Double totalPrice,  LocalDateTime createdAt) {
         this.id = id;
         this.items = items;
         this.totalPrice = totalPrice;
+        this.createdAt = createdAt;
     }
 }
